@@ -1,0 +1,129 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Grocery Store Locations</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+
+
+  <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+
+  <link href='https://fonts.googleapis.com/css?family=Muli:300' rel='stylesheet' type='text/css'>
+
+  <!-- bootswatch -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/cyborg/bootstrap.min.css" rel="stylesheet" integrity="sha384-uSbimwRPo7PKyTL6azsx1CcBce/X9Qg+wX1MAjNV1gAkSXYveZbZeMMyJghdsSol" crossorigin="anonymous">
+
+<!--   <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <style>
+    .jumbotron {
+      font-family:'Muli', sans-serif;
+    }
+    h4 {
+      font-family: 'Muli', sans-serif;
+    }
+    #map {
+      height: 500px;
+      color: black;
+      font-family: 'Muli', sans-serif;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="container">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">New York City Grocery Stores</a>
+        </div>
+      
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="hhttp://americannutritionassociation.org/newsletter/usda-defines-food-deserts">What is a Food Desert?<span class="sr-only">(current)</span></a></li>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    <div class="jumbotron">
+      <h1>Welcome!</h1>
+      <p>Grocery Store Locations Around New York City</p>
+      <p><a type= "butto" class="btn btn-primary btn-lg" href="#" role="button"><span class="glyphicon glyphicon-apple" aria-hidden="true"></span> Learn more</a></p>
+    </div>
+
+
+    <!--   Buttons for layers  -->
+   <div id='menu'>
+    <a href="#grocery" id="grocery" class="button grocery btn btn-info">Grocery Locations</a> 
+    <a href="#poverty" id="poverty" class="button poverty btn btn-info">Poverty Rate</a> 
+    <a href="#FRESH" id="FRESH" class="button FRESH btn btn-info">FRESH Incentive Zoning Area</a>
+  </div>
+
+
+
+<div class= "second" id="map"></div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src ="https://code.jquery.com/jquery-2.2.1.js"></script>
+  <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script>
+    
+    var map = new L.map('map').setView([40.730982,-73.997340], 13);
+
+    L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{
+     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+    }).addTo(map);
+
+  var layerURL = 'https://dmiketa.cartodb.com/api/v2/viz/ea3e719e-f6b1-11e5-8fce-0ecd1babdde5/viz.json'
+
+  cartodb.createLayer(map, layerURL)
+      .addTo(map)
+      .on('done', function(layer) {
+
+    var sublayer = layer.getSubLayer(0);
+
+    sublayers.push(sublayer);
+  }).on('error', function() {
+    //log the error
+  });
+
+    //defining sublayers
+  var LayerActions = {
+    FRESH: function(){
+      sublayers[0].setSQL("SELECT * FROM dcp_nyc_freshzoning WHERE name IN ('Zoning and discretionary tax incentives')");
+      return true;
+    },
+    grocery: function(){
+      sublayers[0].setSQL("SELECT * grocery_locations");
+      return true;
+    },
+    poverty: function() {
+      sublayers[0].setSQL ("SELECT * povertyrate");
+      return true;
+    },
+  }
+
+  $('.button').click(function() {
+    $('.button').removeClass('selected');
+    $(this).addClass('selected');
+    LayerActions[$(this).attr('id')]();
+  });
+
+
+
+  </script>
+</body>
+</html>
