@@ -12,27 +12,27 @@
 
   <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
 
-  <link href='https://fonts.googleapis.com/css?family=Muli:300' rel='stylesheet' type='text/css'>
+<!-- Google fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
   <!-- bootswatch -->
 <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/cyborg/bootstrap.min.css" rel="stylesheet" integrity="sha384-uSbimwRPo7PKyTL6azsx1CcBce/X9Qg+wX1MAjNV1gAkSXYveZbZeMMyJghdsSol" crossorigin="anonymous">
 
-<!--   <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
 
-  <!--[if lt IE 9]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
   <style>
     .jumbotron {
-      font-family:'Muli', sans-serif;
+      font-family:'Raleway', sans-serif;
     }
-    h4 {
-      font-family: 'Muli', sans-serif;
+    h3 {
+      font-family: 'Raleway', sans-serif;
     }
     #map {
       height: 500px;
       color: black;
-      font-family: 'Muli', sans-serif;
+    }
+    /*match button color to grocery store color*/
+    .button {
+      background-color: #5CA2D1;
     }
   </style>
 
@@ -60,12 +60,12 @@
 
     <div class="jumbotron">
       <h1>New York City Grocery Stores</h1>
-      <p>Access to grocery store and fresh produce is not equal across New York City boroughs. Residents of low-income neighborhoods face many challenges when it comes to the availability of different food options. Explore the map below to discover grocery store locations and poverty rates across the city.</p>
+      <p>Access to grocery store and fresh produce is unequal across New York City boroughs. Residents of low-income neighborhoods face many challenges when it comes to the availability of a variety of food options. Explore the map below to discover grocery store locations and poverty rates across the city.</p>
     </div>
 
 
     <!--   Buttons for layers  -->
-   <div id='menu'>
+   <div >
     <a href="#grocery" id="grocery" class="button grocery btn btn-primary">Grocery Locations</a> 
     <a href="#poverty" id="poverty" class="button poverty btn btn-primary">Poverty Rate</a> 
     <a href="#FRESH" id="FRESH" class="button FRESH btn btn-primary">FRESH Incentive Zoning Area</a>
@@ -92,35 +92,36 @@
       .addTo(map)
       .on('done', function(layer) {
 
-    var sublayer = layer.getSubLayer(0);
-
-    sublayers.push(sublayer);
-  }).on('error', function() {
+     sublayer = layer.getSubLayer(0);
+     sublayer.hide();
+     sublayer2 = layer.getSubLayer(1);
+     sublayer2.hide();
+     sublayer3 = layer.getSubLayer(2);
+     sublayer3.show();
+  })
+    .on('error', function() {
     //log the error
   });
 
-    //defining sublayers
-  var LayerActions = {
-    FRESH: function(){
-      sublayers[0].setSQL("SELECT * FROM dcp_nyc_freshzoning WHERE name IN ('Zoning and discretionary tax incentives')");
-      return true;
-    },
-    grocery: function(){
-      sublayers[0].setSQL("SELECT * grocery_locations");
-      return true;
-    },
-    poverty: function() {
-      sublayers[0].setSQL ("SELECT * povertyrate");
-      return true;
-    },
-  }
 
-  $('.button').click(function() {
-    $('.button').removeClass('selected');
-    $(this).addClass('selected');
-    LayerActions[$(this).attr('id')]();
-  });
+  $(".button").click(function() {
+      if($(this).attr('id') == 'grocery' ) {
+        sublayer3.show();
+        sublayer.hide();
+        sublayer2.hide();
 
+      } 
+      if($(this).attr('id') == 'FRESH' ) {
+         sublayer.show();
+        sublayer2.hide();
+        sublayer3.hide();
+      }
+      if($(this).attr('id') == 'poverty' ) {
+         sublayer2.show();
+        sublayer.hide();
+        sublayer3.hide();
+       }
+   });
 
 
   </script>
